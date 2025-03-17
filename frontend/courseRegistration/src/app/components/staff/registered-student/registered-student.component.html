@@ -1,17 +1,84 @@
-<section>
-    <form (ngSubmit)="onSubmit()">
-        <select name="semester" [(ngModel)]="semester" required>
-            <option value="1">s1</option>
-            <option value="2">s2</option>
-            <option value="3">s3</option>
-            <option value="4">s4</option>
-            <option value="5">s5</option>
-            <option value="6">s6</option>
+<section class="p-6 bg-white rounded-lg shadow-lg border border-gray-200 max-w-3xl mx-auto mt-6">
+    <form (ngSubmit)="onSubmit()" class="flex flex-col sm:flex-row justify-between gap-4 items-center">
+ 
+        <label for="semester" class="text-lg font-semibold text-gray-700">
+            Select Semester
+        </label>
+
+
+        <select 
+            name="semester" 
+            [(ngModel)]="semester" 
+            required 
+            class="p-3 w-full sm:w-1/2 border border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out">
+            <option [value]="1">Semester 1</option>
+            <option [value]="2">Semester 2</option>
+            <option [value]="3">Semester 3</option>
+            <option [value]="4">Semester 4</option>
+            <option [value]="5">Semester 5</option>
+            <option [value]="6">Semester 6</option>
+            <option [value]="7">Semester 7</option>
+            <option [value]="8">Semester 8</option>
         </select>
-        <button type="submit">search</button>
+
+        <button 
+            type="submit" 
+            class="px-5 py-2 w-full sm:w-auto text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out">
+            Search
+        </button>
     </form>
 </section>
 
-<section>
 
+<section class="mt-6">
+    <section class="container mx-auto p-4">
+        @if (registeredElectiveStudents().length > 0) {
+            <div class="grid gap-6">
+                @for (registeredStudent of registeredElectiveStudents(); track registeredStudent.studentDetails.user_id) {
+                    <div class="bg-white shadow-lg rounded-lg p-4 border border-gray-200">
+
+                        <!-- Student Details -->
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0">
+                                <div class="bg-blue-500 text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-full">
+                                    {{ registeredStudent.studentDetails.firstName.charAt(0) }}{{ registeredStudent.studentDetails.lastName.charAt(0) }}
+                                </div>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-semibold text-gray-800">
+                                    {{ registeredStudent.studentDetails.firstName }} {{ registeredStudent.studentDetails.lastName }}
+                                </h2>
+                                <p class="text-gray-500 text-sm">
+                                    {{ registeredStudent.studentDetails.email }}
+                                </p>
+                                <p class="text-gray-600 text-sm">
+                                    Semester: {{ registeredStudent.studentDetails.semester }} | Department: {{ registeredStudent.studentDetails.department }}
+                                </p>
+                            </div>
+                        </div>
+    
+                        <!-- Courses Registered -->
+                        @if (registeredStudent.registeredCourses.length > 0) {
+                            <div class="mt-4">
+                                <h3 class="text-md font-semibold text-gray-700">Registered Courses:</h3>
+                                <ul class="mt-2 space-y-2">
+                                    @for (course of registeredStudent.registeredCourses; track course.courseCode) {
+                                        <li class="bg-gray-100 p-3 rounded-md shadow-sm border-l-4 border-blue-500">
+                                            <h4 class="font-medium text-gray-800">{{ course.courseCode }} - {{ course.courseName }}</h4>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                        @else {
+                            <p class="text-gray-500 mt-4">No courses registered.</p>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        @else {
+            <h2 class="text-center text-lg font-semibold text-gray-600 mt-6">No registered students.</h2>
+        }
+    </section>
 </section>

@@ -44,16 +44,7 @@ export interface ElectiveCourse {
     __t: string | null
 }
 
-
-// export interface studentCoreCourse {
-//     _id: string | null,
-//     courseCode: string,
-//     courseName: string,
-//     description: string,
-//     department: string,
-//     semester: number,
-// }
-
+// for fetching user data to load on the ui
 export interface loggedUser {
     firstName: string,
     lastName: string,
@@ -66,4 +57,21 @@ export interface GetElective {
     courseName: string,
     description: string,
     __t: string 
+}
+
+//get the registeredCourses for staff route
+export interface GetRegisteredCourses {
+    studentDetails: {
+        user_id: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+        semester: string,
+        department: string
+    },
+    registeredCourses : [{
+        courseCode: string,
+        courseName: string,
+        description: string
+    }]
 }

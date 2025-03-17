@@ -1,6 +1,7 @@
-import { Component, inject, NgModule, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { StaffService } from '../../../services/staff.service';
 import { FormsModule, NgModel } from '@angular/forms';
+import { GetRegisteredCourses } from '../../../models/model';
 
 @Component({
   selector: 'app-registered-student',
@@ -10,9 +11,10 @@ import { FormsModule, NgModel } from '@angular/forms';
 
 export class RegisteredStudentComponent {
 
-  semester?: number;
+  semester!: number;
   staffService = inject(StaffService);
-  registeredElectiveStudents = signal([]);
+  registeredElectiveStudents = signal<GetRegisteredCourses []>([]);
+  registeredStudent: any;
 
   onSubmit() {
     if(this.semester) {
@@ -20,7 +22,7 @@ export class RegisteredStudentComponent {
       .subscribe({
         next: (respose) => {
           console.log(respose);
-          this.registeredElectiveStudents.set(respose as [])
+          this.registeredElectiveStudents.set(respose as GetRegisteredCourses [])
         }, 
         error: (err) => console.log(err)
       })
