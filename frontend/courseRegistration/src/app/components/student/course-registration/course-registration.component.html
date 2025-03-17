@@ -1,0 +1,43 @@
+
+<section class="container mx-auto p-6">
+    <div class="flex flex-col gap-4">
+        @if(AvailableElectives().length === 0 && AvailableOpenElectives().length === 0) {
+            <h3 class="text-2xl text-blue-400 bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-md shadow-md">
+                Courses have already been registered
+            </h3>        }
+        @if(AvailableElectives().length !== 0) {
+            <h2 class="text-2xl font-semibold text-blue-600">Electives</h2> 
+            @for(elective of AvailableElectives(); track elective._id) {
+                <div class="bg-white shadow-md rounded-lg p-4">
+                    <span class="text-gray-500 leading-relaxed">{{elective.courseCode}}</span>
+                    <h3 class="text-xl font-bold mb-2 leading-relaxed">{{elective.courseName}}</h3>
+                    <div class="mb-4">
+                        <p class="text-gray-700 leading-relaxed">{{elective.description}}</p>
+                    </div>
+                    <div class="flex justify-center">
+                        <button class="bg-green-600 text-white py-2 px-2.5 rounded-md cursor-pointer" (click)="registerClick(elective._id, 'professionalElective')">Register</button>
+                    </div>
+                </div>
+            }
+        }
+        </div>
+        
+    <div class="flex flex-col gap 4">
+        @if(AvailableOpenElectives().length !== 0) {
+            <h2 class="text-2xl font-semibold text-blue-600 pt-6 pb-4">Open Electives</h2>
+            @for(elective of AvailableOpenElectives(); track elective._id) {
+                <div class="bg-white shadow-md rounded-lg p-4">
+                    <span class="text-gray-500 leading-relaxed">{{elective.courseCode}}</span>
+                    <h3 class="text-xl font-bold mb-2 leading-relaxed">{{elective.courseName}}</h3>
+                    <div class="mb-4">
+                        <p class="text-gray-700 leading-relaxed">{{elective.description}}</p>
+                    </div>
+                    <div class="flex justify-center">
+                        <button class="bg-green-600 text-white py-2 px-2.5 rounded-md cursor-pointer" (click)="registerClick(elective._id, 'openElective')">Register</button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>
+

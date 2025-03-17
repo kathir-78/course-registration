@@ -23,7 +23,7 @@ const courseSchema = new mongoose.Schema({
         minlength: 2 
     },
     semester: {
-        type: String,
+        type: Number,
         required: true
     }
 }, 
@@ -38,7 +38,7 @@ const Course = mongoose.model('Course', courseSchema);
 const CoreCourse = Course.discriminator('Core', new mongoose.Schema({}));
 
 const ElectiveCourse = Course.discriminator('Elective', new mongoose.Schema({
-    eligibleDepartment: {
+    eligibleDepartments: {
         set: v => v.map(dep => dep.toUpperCase()),
         type: [String],
         required: true
@@ -46,7 +46,7 @@ const ElectiveCourse = Course.discriminator('Elective', new mongoose.Schema({
 }));
 
 const OpenElectiveCourse = Course.discriminator('OpenElective', new mongoose.Schema({
-    eligibleDepartment: {
+    eligibleDepartments: {
         set: v => v.map(dep => dep.toUpperCase()),
         type: [String],
         required: true

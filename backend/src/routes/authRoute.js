@@ -4,6 +4,7 @@ var jwt = require('jsonwebtoken');
 const Student = require('../models/student');
 const Admin = require('../models/admin');
 const Staff = require('../models/staff');
+const { userAuth } = require('../middlewares/auth');
 
 authRouter.post('/auth/login', async(req, res) => {
     try {
@@ -47,6 +48,18 @@ authRouter.post('/auth/logout', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+
+
+// get the user details like firstname, lastname and role for the loading to the frontend based on the token
+authRouter.get('/auth/user', userAuth, async (req, res) => {
+    try {
+        const {firstName, lastName, role} = req.user;
+        res.status(200).json({firstName, lastName, role})
+
+    } catch (error) {
+        res.status(401).send(error.message);
+    }
+})
 
 
 

@@ -1,0 +1,79 @@
+<section class="p-4">
+    <form [formGroup]="electiveCourse" (ngSubmit)="onSubmit()"    class="space-y-4">
+        <div class="flex flex-col md:flex-row gap-4">
+
+            <mat-form-field class="w-full md:w-1/2">
+                <mat-label>Elective Type</mat-label>
+                <mat-select formControlName="electiveType">
+                    <mat-option value="elective">Professional Elective</mat-option>   <!--professional elective-->
+                    <mat-option value="openElective">Open Elective</mat-option>           <!--open elective-->
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="w-full md:w-1/2">
+                <mat-label>CourseCode</mat-label>
+                <input type="text" matInput formControlName="courseCode">
+            </mat-form-field>
+        </div>
+        <mat-form-field class="w-full">
+            <mat-label>CourseName</mat-label>
+            <input type="text" matInput formControlName="courseName">
+        </mat-form-field>
+        <mat-form-field class="w-full">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="5"></textarea>
+        </mat-form-field>
+        <div class="flex flex-col md:flex-row gap-4">
+            <mat-form-field class="w-full md:w-1/2">
+                <mat-label>Department</mat-label>
+                <mat-select formControlName="department">
+                  <mat-option value="CSE">COMPUTER SCIENCE ENGINEERING</mat-option>
+                  <mat-option value="IT">INFORMATION TECHNOLOGY</mat-option>
+                  <mat-option value="ECE">ECE</mat-option>
+                  <mat-option value="EEE">EEE</mat-option>
+                  <mat-option value="ME">ME</mat-option>
+                  <mat-option value="MC">MC</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="w-full md:w-1/2">
+                <mat-label>Semester</mat-label>
+                <mat-select formControlName="semester">
+                    <mat-option value="1">S1</mat-option>
+                    <mat-option value="2">S2</mat-option>
+                    <mat-option value="3">S3</mat-option>
+                    <mat-option value="4">S4</mat-option>
+                    <mat-option value="5">S5</mat-option>
+                    <mat-option value="6">S6</mat-option>
+                    <mat-option value="7">S7</mat-option>
+                    <mat-option value="8">S8</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+                <label>Eligible Departments</label>
+                <div class="flex flex-wrap gap-4">
+                    @for(dept of departments; track dept) {
+                        <mat-checkbox [checked]="electiveCourse.get('eligibleDepartments')?.value.includes(dept)" (change)="onDepartmentToggle(dept, $event.checked)">
+                            {{ dept }}
+                        </mat-checkbox>
+                    }
+                </div>
+
+                @if(electiveCourse.get('eligibleDepartments')?.hasError('required')) {
+                    <mat-error>
+                        At least one department must be selected
+                    </mat-error>
+                }
+
+        @if(mode !== 'edit') {
+            <div class="flex justify-center">
+                <button  type= "submit"  mat-flat-button color="primary w-full md:w-auto md px-8">Create</button>
+            </div>
+        }
+        @else {
+            <div class="flex justify-center">
+                <button  type= "submit"  mat-flat-button color="primary w-full md:w-auto md px-8">Update</button>
+            </div>
+        }
+
+    </form>
+</section>

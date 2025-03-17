@@ -97,7 +97,6 @@ adminRouter.patch('/user/student/:id', async (req, res) => {
         res.status(200).json({ message: 'Student updated', data: updatedStudent });
 
     } catch (error) {
-
         res.status(400).send(error.message);
     }
 });

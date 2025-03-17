@@ -1,0 +1,10 @@
+<section>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <label>
+            <input type="email" formControlName="email">
+        </label>
+        <button type="submit">login</button>
+    </form>
+
+    <!-- <button (click)="logout()">Logout</button> -->
+</section>

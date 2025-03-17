@@ -1,0 +1,42 @@
+
+<section class="p-4 bg-gray-50">
+    <div class="container mx-auto">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Manage staffs</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        @for(staff of userData(); track staff._id) {
+          <div class="bg-white rounded-lg shadow hover:shadow-md transition-all p-5 border border-gray-200">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-lg font-semibold text-gray-800">{{staff.firstName}} {{staff.lastName}}</h3>
+                <p class="text-sm text-gray-500">{{staff.email}}</p>
+              </div>
+              <div class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">{{staff.role}}</div>
+            </div>
+            
+            <div class="mt-4 space-y-2">
+              <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                <span class="text-sm text-gray-600">{{staff.department}}</span>
+              </div>
+            </div>
+            
+            <div class="mt-5 flex justify-end space-x-2">
+              <a [routerLink] = "[ '/admin/manage/staff/', staff._id]" class="px-3 py-1 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 rounded transition-colors">
+                Edit
+              </a>
+              <a  (click)="onClick(staff._id)" class="px-3 py-1 text-xs bg-red-50 hover:bg-red-100 text-red-700 rounded transition-colors cursor-pointer">
+                Delete
+              </a>
+            </div>  
+          </div>
+        } @empty {
+          <div class="col-span-full text-center py-10 bg-white rounded-lg border border-gray-200">
+            <p class="text-gray-500">No staffs found</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>

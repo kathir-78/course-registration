@@ -1,0 +1,20 @@
+<div class="min-h-screen flex flex-col">
+
+    <!-- Fixed Header -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gray-100 flex justify-between items-center px-4 z-20">
+        <h1 class="text-2xl">welcome {{user()?.firstName +' ' + user()?.lastName}}</h1>
+        <div>
+            <app-buttons [label]="'logout'" (buttonClicked) = "clickedLogOut()"/>
+        </div>
+    </header>
+
+    
+        <aside class="fixed left-0 top-16 bottom-0 w-16 sm:w-24 md:w-48 lg:w-64 bg-gray-100 z-10 p-4 pt-0">
+            <app-side-buttons/>
+        </aside>
+
+
+        <main class="flex-1 ml-16 sm:ml-24 md:ml-48 lg:ml-64 pt-16 overflow-y-auto">
+            <router-outlet/>
+        </main>
+</div>

@@ -1,0 +1,22 @@
+<mat-card class="m-4  pb-4">
+    <mat-card-content>
+        <mat-card-header>
+            <h3 class="text-xl font-semibold mb-4">
+                Add Users
+            </h3>
+        </mat-card-header>
+        <div class="flex flex-row gap-4">
+            <a (click) ="onStudentClicked()" mat-stroked-button class="px-4 py-2 border border-blue-500 text-blue-500 uppercase font-bold text-center transition duration-300 hover:bg-blue-500 hover:text-white">Add Student</a>
+            <a (click) ="onUserClicked()" mat-stroked-button class="px-4 py-2 border border-blue-500 text-blue-500 uppercase font-bold text-center transition duration-300 hover:bg-blue-500 hover:text-white">Add Staff</a>
+        </div>
+    </mat-card-content>
+    <div>
+        @if(isStudent) {
+            <app-adminstudent></app-adminstudent>
+        }
+        @if(isUser) {
+            <app-adminuser/>
+        }
+    </div>
+    
+</mat-card>

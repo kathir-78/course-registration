@@ -1,0 +1,46 @@
+<section class="container mx-auto p-6">
+    <!-- Core Courses Section -->
+    <div class="flex flex-col gap-4">
+        <h2 class="text-2xl font-semibold text-blue-600">Core Courses</h2>
+        @for(corecourse of coreCourses(); track corecourse._id) {
+            <div class="bg-white shadow-md rounded-lg p-4">
+                <span class="text-gray-500 leading-relaxed">{{ corecourse.courseCode }}</span>
+                <h3 class="text-xl font-bold mb-2 leading-relaxed">{{ corecourse.courseName }}</h3>
+                <div class="mb-4">
+                    <p class="text-gray-700 leading-relaxed">{{ corecourse.description }}</p>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Electives Section -->
+    <div class="flex flex-col gap-4">
+        <!-- Professional Electives -->
+        @if (professionalElectives().length > 0) {
+            <h2 class="text-2xl font-semibold text-blue-600 pt-6 pb-4">Professional Electives</h2>
+            @for(professionalElective of professionalElectives(); track professionalElective._id) {
+                <div class="bg-white shadow-md rounded-lg p-4">
+                    <span class="text-gray-500 leading-relaxed">{{ professionalElective.courseCode }}</span>
+                    <h3 class="text-xl font-bold mb-2 leading-relaxed">{{ professionalElective.courseName }}</h3>
+                    <div class="mb-4">
+                        <p class="text-gray-700 leading-relaxed">{{ professionalElective.description }}</p>
+                    </div>
+                </div>
+            }
+        }
+
+        <!-- Open Electives -->
+        @if (openElectives().length > 0) {
+            <h2 class="text-2xl font-semibold text-blue-600 pt-6 pb-4">Open Electives</h2>
+            @for(openElective of openElectives(); track openElective._id) {
+                <div class="bg-white shadow-md rounded-lg p-4">
+                    <span class="text-gray-500 leading-relaxed">{{ openElective.courseCode }}</span>
+                    <h3 class="text-xl font-bold mb-2 leading-relaxed">{{ openElective.courseName }}</h3>
+                    <div class="mb-4">
+                        <p class="text-gray-700 leading-relaxed">{{ openElective.description }}</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>

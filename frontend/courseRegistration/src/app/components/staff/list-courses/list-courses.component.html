@@ -1,0 +1,67 @@
+<section class="container mx-auto p-4">
+    <div class="grid grid-cols-1 gap-4">
+
+        <div class="bg-white shadow-md rounded-lg p-4">
+            <h2 class="text-2xl font-bold mb-4">Core Courses</h2>
+            <div class="space-y-4">
+                @for (ccourse of Courses(); track ccourse._id) {
+                    @if(ccourse.__t === 'Core') {
+                        <div class="flex flex-col md:flex-row items-start justify-between bg-gray-50 p-4 rounded-lg">
+                            <div class="md:w-2/3">
+                                <span class="block text-sm font-semibold text-gray-500" style="line-height: 1.75;">{{ ccourse.courseCode }} <span class="bg-blue-100 text-blue-800 text-xs font-semibold ml-2 px-2.5 py-0.5 rounded">{{ 'Semester ' + ccourse.semester }}</span></span>
+                                <h3 class="text-xl font-semibold text-gray-800" style="line-height: 1.75;">{{ ccourse.courseName }} </h3>
+                                <p class="text-gray-600" style="line-height: 1.75;">{{ ccourse.description }}</p>
+                            </div>
+                            <div class="mt-4 md:mt-0 flex space-x-2 items-center">
+                                <a [routerLink]="['/staff/core/edit/', ccourse._id]" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer">Edit</a>
+                                <button (click)="onDelete('core', ccourse._id)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer">Delete</button>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-4">
+            <h2 class="text-2xl font-bold mb-4">Elective Courses</h2>
+            <div class="space-y-4">
+                @for (ccourse of Courses(); track ccourse._id) {
+                    @if(ccourse.__t === 'Elective') {
+                        <div class="flex flex-col md:flex-row items-start justify-between bg-gray-50 p-4 rounded-lg">
+                            <div class="md:w-2/3">
+                                <span class="block text-sm font-semibold text-gray-500" style="line-height: 1.75;">{{ ccourse.courseCode }} <span class="bg-blue-100 text-blue-800 text-xs font-semibold ml-2 px-2.5 py-0.5 rounded">{{ 'Semester ' + ccourse.semester }}</span></span>
+                                <h3 class="text-xl font-semibold text-gray-800" style="line-height: 1.75;">{{ ccourse.courseName }} </h3>
+                                <p class="text-gray-600" style="line-height: 1.75;">{{ ccourse.description }}</p>
+                            </div>
+                            <div class="mt-4 md:mt-0 flex space-x-2 items-center">
+                                <button [routerLink]="['/staff/edit/elective', ccourse._id]" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer">Edit</button>
+                                <button (click)="onDelete('elective', ccourse._id)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer">Delete</button>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-4">
+            <h2 class="text-2xl font-bold mb-4">Open Elective Courses</h2>
+            <div class="space-y-4">
+                @for (ccourse of Courses(); track ccourse._id) {
+                    @if(ccourse.__t === 'OpenElective') {
+                        <div class="flex flex-col md:flex-row items-start justify-between bg-gray-50 p-4 rounded-lg">
+                            <div class="md:w-2/3">
+                                <span class="block text-sm font-semibold text-gray-500" style="line-height: 1.75;">{{ ccourse.courseCode }} <span class="bg-blue-100 text-blue-800 text-xs font-semibold ml-2 px-2.5 py-0.5 rounded">{{ 'Semester ' + ccourse.semester }}</span></span>
+                                <h3 class="text-xl font-semibold text-gray-800" style="line-height: 1.75;">{{ ccourse.courseName }} </h3>
+                                <p class="text-gray-600" style="line-height: 1.75;">{{ ccourse.description }}</p>
+                            </div>
+                            <div class="mt-4 md:mt-0 flex space-x-2 items-center">
+                                <button [routerLink]="['/staff/edit/openElective', ccourse._id]" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer">Edit</button>
+                                <button (click)="onDelete('openElective', ccourse._id)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer">Delete</button>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>

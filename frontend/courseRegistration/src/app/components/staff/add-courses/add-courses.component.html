@@ -1,0 +1,19 @@
+<section>
+    <mat-card appearance="outlined" class="p-5 m-4">
+        <mat-card-title>
+            <h3 class="">Add Courses</h3>
+        </mat-card-title>
+        <mat-card-header>
+            <button (click)="onCoreClicked()" mat-stroked-button class="mr-4">Add Course</button>
+            <button (click)="onElectiveClicked()" mat-stroked-button >Add Electives</button>
+        </mat-card-header>
+        <mat-card-content class="m-4">
+            @if(isCoreCourse) {
+                <app-corecourse></app-corecourse>
+            }
+            @if(isElectiveCourse) {
+                <app-elective-course></app-elective-course>
+            }
+        </mat-card-content>
+      </mat-card>      
+</section>

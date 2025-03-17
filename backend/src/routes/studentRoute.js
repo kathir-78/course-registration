@@ -1,62 +1,52 @@
 const express = require('express');
 const {userAuth, isAllowdRole} = require('../middlewares/auth')
 const studentRouter = express.Router();
-const { CoreCourse, Course, ElectiveCourse, OpenElectiveCourse} = require('../models/courseSchema');
+const { CoreCourse, ElectiveCourse, OpenElectiveCourse} = require('../models/courseSchema');
 const { CourseRegistered } = require('../models/courseRegistered');
 
 // get the all courses like core, elective and open-elective 
 
-studentRouter.get('/courses/:coursetype', userAuth, async (req, res) => {
+studentRouter.get('/courses/:coursetype', userAuth, isAllowdRole(['student']), async (req, res) => {
 
     const {coursetype} = req.params;
     try {
 
-        const {department} = req.user
+        const { department, semester, _id: studentId } = req.user
+        let registeredCourses = await CourseRegistered.find({ studentId }).select('courseId');
+        registeredCourses = registeredCourses.map(course => course.courseId);
         
         if(coursetype === 'core') {
 
-            const findCourse = await CoreCourse.find({department: department})
+            const findCourse = await CoreCourse.find({department: department, semester})
 
             if(findCourse.length === 0) {
                 return res.status(400).send('course not found');
             }
-            res.status(200).json({findCourse});
+            res.status(200).json(findCourse);
         }
 
         else if(coursetype === 'elective') {
 
             const findCourse = await ElectiveCourse.find({
-
                 $or: [
-                    { department: department },
-                    { eligibleDepartment: department}
-                ]
+                    { department, semester },
+                    { eligibleDepartments:{ $in: [department] }, semester}
+                ],
+                _id: { $nin: registeredCourses }
             })
-
-            if(findCourse.length === 0) {
-                return res.status(400).send('no electiveCourse found');
-            }
-
-            res.status(200).json({findCourse});
-
+            res.status(200).json(findCourse);
         }
 
         else if (coursetype === 'openElective') {
-
             const findCourse = await OpenElectiveCourse.find({
-
                 $and: [
-                    { department: { $ne: department } },
-                    { eligibleDepartment: { $in: [department] } }
-                ]
+                    { department: { $ne: department }, semester },
+                    // { department:  department, semester: semester },
+                    { eligibleDepartments: { $in: [department] }, semester }
+                ],
+                _id: { $nin: registeredCourses }
             })
-
-            if(findCourse.length === 0) {
-                return res.status(400).send('no electiveCourse found');
-            }
-
-            res.status(200).json({findCourse});
-
+            res.status(200).json(findCourse);
         }
 
         else {
@@ -75,8 +65,7 @@ studentRouter.get('/courses/:coursetype', userAuth, async (req, res) => {
 studentRouter.post('/course/register/elective/:id', userAuth, isAllowdRole(['student']), async (req, res) => {
     try {
         const { id } = req.params;
-        const { user_id } = req.user;
-        const { department }  = req.user
+        const { _id, department} = req.user;
 
         const course = await ElectiveCourse.findOne({_id: id});
 
@@ -87,8 +76,8 @@ studentRouter.post('/course/register/elective/:id', userAuth, isAllowdRole(['stu
         }
 
         const existingRegistration = await CourseRegistered.findOne({
-            studentId: user_id,
-            courseId: course._id
+            courseId: course._id,
+            studentId: _id
         });
 
         if (existingRegistration) {
@@ -97,7 +86,7 @@ studentRouter.post('/course/register/elective/:id', userAuth, isAllowdRole(['stu
 
         const newRegistration = new CourseRegistered({
             courseId: course._id,
-            studentId: user_id
+            studentId: _id
         });
 
         await newRegistration.save();
@@ -115,20 +104,19 @@ studentRouter.post('/course/register/elective/:id', userAuth, isAllowdRole(['stu
 
 studentRouter.post('/course/register/openElective/:id', userAuth, isAllowdRole(['student']), async (req, res) => {
     try {
-        const { id} = req.params;
-        const { user_id } = req.user;
-        const { department }  = req.user
+        const { id } = req.params;
+        const { _id, department} = req.user;
 
         const course = await OpenElectiveCourse.findOne({_id: id});
 
         if (!course) return res.status(404).json({ error: 'Course not found' });
 
-        if(!course.eligibleDepartment.includes(department)) {
+        if(!course.eligibleDepartments.includes(department)) {
             return res.status(400).send('not eligible for this course');
         }
         
         const existingRegistration = await CourseRegistered.findOne({
-            studentId: user_id,
+            studentId: _id,
             courseId: course._id
         });
 
@@ -138,7 +126,7 @@ studentRouter.post('/course/register/openElective/:id', userAuth, isAllowdRole([
 
         const newRegistration = new CourseRegistered({
             courseId: course._id,
-            studentId: user_id
+            studentId: _id
         });
 
         await newRegistration.save();
@@ -157,46 +145,25 @@ studentRouter.post('/course/register/openElective/:id', userAuth, isAllowdRole([
 
 // GET registered courses for elective and open-elective /course/registered/:courseType
 
-studentRouter.get('/course/registered/electives', userAuth, isAllowdRole(['student']), async(req, res)=> {
+studentRouter.get('/courses/registered/electives', userAuth, isAllowdRole(['student']), async(req, res)=> {
 
     try {
 
-        const {user_id} = req.user;
+        const { _id } = req.user;
     
-        const electiveRegCourse = await CourseRegistered.find({studentId: user_id})
+        const electiveRegCourse = await CourseRegistered.find({studentId: _id})
         .populate('courseId', ["courseCode", "courseName", "description"]);
+
+        const courseId = electiveRegCourse.map(reg => reg.courseId);
     
-        if(electiveRegCourse.length === 0) {
-            return res.status(404).json({message: 'Elective course is not registered'})
-        }
-    
-        res.status(201).json(electiveRegCourse);
+        res.status(201).json(courseId);
         
     } catch (error) {
         res.status(400).send(error.message);
+        console.log(error);
     }
 
 })
 
-// studentRouter.get('/course/registered/openElective', userAuth, isAllowdRole(['student']), async(req, res)=> {
-    
-//     try {
-
-//         const {user_id} = req.user;
-    
-//         const electiveRegCourse = await CourseRegistered.find({studentId: user_id})
-//         .populate('courseId', ["courseCode", "courseName", "description"]);
-    
-//         if(electiveRegCourse.length === 0) {
-//             return res.status(404).json({message: 'OpenElective course is not registered'})
-//         }
-    
-//         res.status(201).json(electiveRegCourse);
-        
-//     } catch (error) {
-//         res.status(400).send(error.message);
-//     }
-    
-// })
 
 module.exports = studentRouter;

@@ -85,7 +85,7 @@ const validateElectiveCourse = (req) => {
         'description',
         'department',
         'semester',
-        'eligibleDepartment'
+        'eligibleDepartments'
     ]
 
     const requestFields = Object.keys(req.body);
@@ -101,7 +101,7 @@ const validateEditElectiveCourse = (req) => {
         'description',
         'department',
         'semester',
-        'eligibleDepartment'
+        'eligibleDepartments'
     ]
 
     const requestFields = Object.keys(req.body);

@@ -1,0 +1,80 @@
+<div class="p-4 md:p-10 max-w-4xl mx-auto">
+  <form [formGroup]="studentForm" (ngSubmit)="addStudent()" class="flex flex-col w-full gap-4">
+
+    <div class="flex flex-col md:flex-row gap-4">
+      <mat-form-field class="flex-1 w-full md:min-w-[240px]">
+        <mat-label>FirstName</mat-label>
+        <input matInput type="text" formControlName="firstName">
+      </mat-form-field>
+      
+      <mat-form-field class="flex-1 w-full md:min-w-[240px]">
+        <mat-label>LastName</mat-label>
+        <input matInput type="text" formControlName="lastName">
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-4">
+      <mat-form-field class="flex-1 w-full md:min-w-[240px]">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email">
+      </mat-form-field>
+      
+      <mat-form-field class="flex-1 w-full md:min-w-[240px]">
+        <mat-label>Department</mat-label>
+        <mat-select formControlName="department">
+          <mat-option value="CSE">COMPUTER SCIENCE ENGINEERING</mat-option>
+          <mat-option value="IT">INFORMATION TECHNOLOGY</mat-option>
+          <mat-option value="ECE">ECE</mat-option>
+          <mat-option value="EEE">EEE</mat-option>
+          <mat-option value="ME">ME</mat-option>
+          <mat-option value="MC">MC</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-4">
+      <mat-form-field class="flex-1 w-full md:min-w-[240px]">
+        <mat-label>Register Number</mat-label>
+        <input matInput type="text" formControlName="user_id">
+      </mat-form-field>
+      
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-4">
+      <mat-form-field class="flex-1 w-full md:min-w-[240px]">
+        <mat-label>Year</mat-label>
+        <mat-select formControlName="year">
+          <mat-option value="I">FIRST YEAR</mat-option>
+          <mat-option value="II">SECOND YEAR</mat-option>
+          <mat-option value="III">THIRD YEAR</mat-option>
+          <mat-option value="IV">FOURTH YEAR</mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      
+      <mat-form-field class="flex-1 w-full md:min-w-[240px]">
+        <mat-label>Semester</mat-label>
+        <mat-select formControlName="semester">
+          <mat-option value="1">Semester 1</mat-option>
+          <mat-option value="2">Semester 2</mat-option>
+          <mat-option value="3">Semester 3</mat-option>
+          <mat-option value="4">Semester 4</mat-option>
+          <mat-option value="5">Semester 5</mat-option>
+          <mat-option value="6">Semester 6</mat-option>
+          <mat-option value="7">Semester 7</mat-option>
+          <mat-option value="8">Semester 8</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex justify-center mt-4">
+      @if(mode !== 'edit') {
+        <button type= "submit" mat-flat-button color="primary w-full md:w-auto px-8">Create</button>
+      }
+      @else {
+        <button type= "submit" mat-flat-button color="primary w-full md:w-auto px-8">Update</button>
+      }
+    </div>
+  </form>
+</div>
