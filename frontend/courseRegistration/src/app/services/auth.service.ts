@@ -22,7 +22,7 @@ export class AuthService {
   initializeAuth(shouldRedirect: boolean = false) {
     return this.http.get<loggedUser>(`${this.URL}/auth/user`, { withCredentials: true }).pipe(
       tap(user => {
-        console.log("User initialized:", user);
+        console.log("User initialized:");
         this.currentUserSubject.next(user);
         this.isInitialized.next(true);
         if(shouldRedirect) {
@@ -38,10 +38,9 @@ export class AuthService {
   }
 
   loginUser(email: any) {
-    this.http.post<{message: string, token: string}>(this.URL + '/auth/login', {email}, {withCredentials: true}).subscribe({
+    this.http.post<{message: string}>(this.URL + '/auth/login', {email}, {withCredentials: true}).subscribe({
       next: (response) => {
         console.log(response.message);
-        console.log(response.token);
         this.initializeAuth(true);
       },
       error: (err) => {

@@ -14,7 +14,6 @@ export class RegisteredStudentComponent {
   semester!: number;
   staffService = inject(StaffService);
   registeredElectiveStudents = signal<GetRegisteredCourses []>([]);
-  registeredStudent: any;
 
   onSubmit() {
     if(this.semester) {
