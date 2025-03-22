@@ -30,11 +30,11 @@ authRouter.post('/auth/login', async(req, res) => {
         var token = jwt.sign({ firstName: user.firstName, email: user.email, role: user.role}, process.env.JWT_SECRET, {expiresIn: '7d'});
 
         res.status(200)
-        .clearCookie('cr')  // clear the existing cookie that is stored in the client side
+        .clearCookie('cr')  // clear the existing cookie that is stored in the client side (browser)
         .cookie('cr', token, 
             {httpOnly: true,  // Prevent JavaScript access
             secure: false,   // Set to 'true' in production (requires HTTPS)
-            sameSite: 'Lax', expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) }).json({ message: 'Login successful', token });
+            sameSite: 'Lax', expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) }).json({ message: 'Login successful'});
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -60,7 +60,6 @@ authRouter.get('/auth/user', userAuth, async (req, res) => {
         res.status(401).send(error.message);
     }
 })
-
 
 
 module.exports = authRouter

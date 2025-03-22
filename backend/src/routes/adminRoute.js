@@ -1,200 +1,25 @@
 const express = require('express');
 const adminRouter = express.Router();
-const Student = require('../models/student');
-const Staff = require('../models/staff');
-const Admin = require('../models/admin');
-const { validateEditStudent, validateCreateUser, validateEdit } = require('../utils/validation');
 const { userAuth, isAllowdRole} = require('../middlewares/auth');
+const { getUser, getUserWithId, createUserStudent, updateUserStudent, removeUserStudent, createUserAdminOrStaff, updateUserAdminOrStaff, removeUserAdminOrStaff } = require('../controllers/admin');
 
-// adminRouter.use(userAuth, isAllowdRole(['admin']));
+// get all users student or staff or admin
+adminRouter.get('/user/:userType', userAuth, isAllowdRole(['admin']), getUser)
 
-adminRouter.get('/user/:userType' , async(req, res) => {
-    try {
-        const { userType } = req.params
+adminRouter.get('/user/:userType/:id', userAuth, isAllowdRole(['admin']), getUserWithId)
 
-        if(userType === 'staff') {
-            const staff = await Staff.find({role: userType});
-            res.status(200).json(staff);
-        }
+// student related routes
+adminRouter.post('/user/student', userAuth, isAllowdRole(['admin']), createUserStudent);
 
-        else if (userType === 'student') {
-            const student = await Student.find({role: userType});
-            res.status(200).json(student);
-        }
+adminRouter.patch('/user/student/:id', userAuth, isAllowdRole(['admin']), updateUserStudent);
 
-        else if (userType === 'admin') {
-            const student = await Admin.find({role: userType});
-            res.status(200).json(student);
-        }
-
-        else {
-            res.status(404).send('invalid user');
-        }
-
-    } catch (error) {
-        res.status(400).send('user not found');
-    }
-})
-
-adminRouter.get('/user/:userType/:id', async(req, res) => {
-    try {
-        const { userType, id } = req.params
-
-        if(userType === 'staff') {
-            const staff = await Staff.findById(id);
-            res.status(200).json(staff);
-        }
-
-        else if (userType === 'student') {
-            const student = await Student.findById(id);
-            const {firstName, lastName, email, department, user_id, year, semester} = student;
-            res.status(200).json({firstName, lastName, email, department, user_id, year, semester});
-        }
-
-        else if (userType === 'admin') {
-            const student = await Admin.findById(id);
-            res.status(200).json(student);
-        }
-
-        else {
-            res.status(404).send('invalid user');
-        }
-
-    } catch (error) {
-        res.status(500).send('user not found');
-
-    }
-})
-
-adminRouter.post('/user/student', async (req, res) => {
-    try {
-        validateCreateUser(req);
-
-        const { firstName, lastName, email, department, user_id, role, year, semester } = req.body;
-
-        const newStudent = new Student({ firstName, lastName, email, department, user_id, role, year, semester });
-
-        await newStudent.save();
-
-        res.status(201).json({ message: 'Student created successfully', data: newStudent });
-
-    } catch (error) {
-
-        res.status(400).send(error.message);
-    }
-});
-
-adminRouter.patch('/user/student/:id', async (req, res) => {
-    try {
-
-        validateEditStudent(req);
-        const { id } = req.params;
-
-        const updatedStudent = await Student.findByIdAndUpdate({_id:id}, req.body, { new: true, });
-
-        if (!updatedStudent) return res.status(404).json({ message: 'Student not found' });
-
-        res.status(200).json({ message: 'Student updated', data: updatedStudent });
-
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-});
-
-adminRouter.delete('/user/student/:id', async (req, res) => { 
-    try {
-        const { id } = req.params;
-
-        const student = await Student.findByIdAndDelete({_id:id});
-
-        if (!student) return res.status(404).json({ message: 'Student not found' });
-
-        res.status(200).json({ message: 'Student deleted' });
-
-    } catch (error) {
-
-        res.status(400).send(error.message);
-    }
-});
+adminRouter.delete('/user/student/:id', userAuth, isAllowdRole(['admin']), removeUserStudent);
 
 // Admin & Staff routes
-adminRouter.post('/user/:usertype', async (req, res) => {
-    try {
-        validateCreateUser(req);
-        const { usertype } = req.params;
-        const { firstName, lastName, email, department, user_id, role } = req.body;
+adminRouter.post('/user/:usertype', userAuth, isAllowdRole(['admin']), createUserAdminOrStaff);
 
-        let user;
-        if (usertype === 'staff') {
-            user = new Staff({ firstName, lastName, email, department, user_id, role });
+adminRouter.patch('/user/:usertype/:id', userAuth, isAllowdRole(['admin']), updateUserAdminOrStaff);
 
-        } else if (usertype === 'admin') {
-            user = new Admin({ firstName, lastName, email, department, user_id, role });
-        
-        } else {
-            return res.status(400).json({ message: 'Invalid user type' });
-        }
-
-        await user.save();
-
-        res.status(201).json({ message: `${usertype} created`, data: user }); 
-
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-});
-
-
-
-adminRouter.patch('/user/:usertype/:id', async (req, res) => {
-    try {
-        const { usertype, id } = req.params;
-        let Model;
-
-        if (usertype === 'staff') {
-            validateEdit(req);
-            Model = Staff;
-
-        } else if (usertype === 'admin') {
-            validateEdit(req);
-            Model = Admin;
-
-        } else {
-            return res.status(400).json({ message: 'Invalid user type' });
-        }
-
-        const updatedUser = await Model.findByIdAndUpdate({_id:id}, req.body, { new: true });
-
-        if (!updatedUser) return res.status(404).json({ message: `${usertype} not found` });
-
-        res.status(200).json({ message: `${usertype} updated`, data: updatedUser });
-
-    } catch (error) {
-
-        res.status(400).send(error.message);
-    }
-});
-
-adminRouter.delete('/user/:usertype/:id', async (req, res) => {
-    try {
-        const { usertype, id } = req.params;
-        let Model;
-
-        if (usertype === 'staff') Model = Staff;
-
-        else if (usertype === 'admin') Model = Admin;
-
-        else return res.status(400).json({ message: 'Invalid user type' });
-
-        const user = await Model.findByIdAndDelete({_id:id});
-
-        if (!user) return res.status(404).json({ message: `${usertype} not found` });
-
-        res.status(200).json({ message: `${usertype} deleted` });
-
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-});
+adminRouter.delete('/user/:usertype/:id', userAuth, isAllowdRole(['admin']), removeUserAdminOrStaff);
 
 module.exports = adminRouter;

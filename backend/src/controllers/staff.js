@@ -6,9 +6,16 @@ const { validateCourse, validateElectiveCourse, validateEditCourse, validateEdit
 
 const getCourses = async(req, res) => {
 
-    const courses = await Course.find({}, '_id courseCode courseName description department semester');
+    const {department} = req.user; 
+    try{
+    const courses = await Course.find({department}, '_id courseCode courseName description department semester');
 
     res.status(200).json({message: 'list of courses', courses});
+
+    }
+    catch {
+        res.status(400).send(error.message);
+    }
 
 }
 
@@ -16,13 +23,18 @@ const getSpecificCourse =  async(req, res) => {
 
     const {courseType} = req.params;
 
-    const courses = await Course.find({__t:courseType});
+    try {
+        const courses = await Course.find({__t:courseType});
 
-    if(courses.length == 0) {
-        return res.status(404).send(` ${courseType} course not found`);
+        if(courses.length == 0) {
+            return res.status(404).send(` ${courseType} course not found`);
+        }
+    
+        res.status(200).json({message: 'list of courses', courses});
+
+    } catch (error) {
+        res.status(400).send(error.message);
     }
-
-    res.status(200).json({message: 'list of courses', courses});
 
 }
 
@@ -51,7 +63,7 @@ const getSpecificCourseWithUnique = async(req, res) => {
             throw new Error ('invalid course type');
         
     } catch (error) {
-        res.status(400).send(error.message)
+        res.status(400).send(error.message);
     }
 }
 
