@@ -10,7 +10,7 @@ const staffRoute = require('./src/routes/staffRoute');
 const studentRouter = require('./src/routes/studentRoute');
 
 const corsOptions = {
-    origin: 'http://localhost:4200', // Replace with your frontend URL
+    origin: 'http://localhost:4200',
     credentials: true, // Allow cookies to be sent
     optionsSuccessStatus: 200,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],

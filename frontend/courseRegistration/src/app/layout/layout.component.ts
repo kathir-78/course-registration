@@ -8,7 +8,7 @@ import { loggedUser } from '../models/model';
 @Component({
   selector: 'app-layout',
   imports: [RouterOutlet, ButtonsComponent, SideButtonsComponent],
-  templateUrl: './layout.component.html',
+  templateUrl: './layout.component.html'
 })
 export class LayoutComponent implements OnInit {
 
@@ -25,8 +25,7 @@ export class LayoutComponent implements OnInit {
   }
 
   clickedLogOut() {
-    console.log('loguoutclicked');
-    this.authService.logOut()
+    this.authService.logOut();
   }
 
 }

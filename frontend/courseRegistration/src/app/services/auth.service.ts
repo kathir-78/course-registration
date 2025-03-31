@@ -38,7 +38,18 @@ export class AuthService {
   }
 
   loginUser(email: any) {
-    this.http.post<{message: string}>(this.URL + '/auth/login', {email}, {withCredentials: true}).subscribe({
+    this.http.post<{message: string}>(this.URL + '/auth/login/login', {email},).subscribe({
+      next: (response) => {
+        console.log(response.message);
+        this.initializeAuth(true);
+      },
+      error: (err) => {
+        console.error('Login failed', err.message) }
+    })
+  }
+
+  loginWithGoogle(googleCredential: string) {
+    this.http.post<{message: string}>(this.URL + '/auth/login/google-login', {googleCredential}, ).subscribe({
       next: (response) => {
         console.log(response.message);
         this.initializeAuth(true);

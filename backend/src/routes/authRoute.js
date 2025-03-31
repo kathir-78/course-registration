@@ -1,15 +1,40 @@
 const express = require('express');
 const authRouter = express.Router();
+const { OAuth2Client } = require('google-auth-library');
 var jwt = require('jsonwebtoken');
 const Student = require('../models/student');
 const Admin = require('../models/admin');
 const Staff = require('../models/staff');
 const { userAuth } = require('../middlewares/auth');
 
-authRouter.post('/auth/login', async(req, res) => {
+// here the both the google-login and the normal login takes place
+authRouter.post('/auth/login/:loginType', async(req, res) => {
+
+    let email;
+    const loginType = req.params.loginType
+
     try {
-    
-        const {email} = req.body;
+        if(loginType === "google-login") {
+            const { googleCredential } = req.body;
+            
+            const client = new OAuth2Client(process.env.CLIENT_ID);
+            
+            const ticket = await client.verifyIdToken({
+                idToken: googleCredential,
+                audience: process.env.CLIENT_ID,
+            });
+            
+            const payload = ticket.getPayload();
+            if (!payload) {
+                return res.status(401).json({ message: 'Invalid Google Token' });
+            }
+            // console.log(payload);
+            email = payload.email;
+        }
+        else {
+             email = req.body.email;
+        }
+        
 
         let user;
 
@@ -33,7 +58,7 @@ authRouter.post('/auth/login', async(req, res) => {
         .clearCookie('cr')  // clear the existing cookie that is stored in the client side (browser)
         .cookie('cr', token, 
             {httpOnly: true,  // Prevent JavaScript access
-            secure: false,   // Set to 'true' in production (requires HTTPS)
+            secure: false,   
             sameSite: 'Lax', expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) }).json({ message: 'Login successful'});
     } catch (error) {
         res.status(500).send(error.message);
@@ -50,7 +75,7 @@ authRouter.post('/auth/logout', async (req, res) => {
 });
 
 
-// get the user details like firstname, lastname and role for the loading to the frontend based on the token
+// get the user details like firstname, lastname and role for the loading to the frontend based UI on the token
 authRouter.get('/auth/user', userAuth, async (req, res) => {
     try {
         const {firstName, lastName, role} = req.user;
