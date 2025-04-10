@@ -51,7 +51,7 @@ The project is deployed on an **AWS EC2 Instance** with the following setup:
 
 
 ### Steps to Access:
-1. Live URL [http://16.16.87.86](http://16.16.87.86)
+1. Live URL [http://51.21.210.241](http://51.21.210.241)
 2. Log in using **Google Sign-In (GSI)** to access the system.
 
 ## 📜 License
