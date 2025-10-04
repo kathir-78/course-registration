@@ -49,9 +49,19 @@ The project is deployed on an **AWS EC2 Instance** with the following setup:
 - **Backend**: Running on Node.js with PM2 for process management (24/7).
 - **Database**: MongoDB Atlas (cloud-hosted).
 
+## ⚠️ Note on Google Sign-In (GSI) and HTTP
+
+Google Sign-In (GSI) **requires a secure context**, which means:
+
+> 🔒 GSI will **NOT work over HTTP** — it **only works over HTTPS** or on `localhost`.
+
+try to login with these provided emails:
+- Student: kathiresan.it22@bitsathy.ac.in 
+- Admin: kathir2004admin@gmail.com
+- Staff: kathir2004harini@gmail.com
 
 ### Steps to Access:
-1. Live URL [http://16.16.87.86](http://16.16.87.86)
+1. Live URL [http://51.21.210.241](http://51.21.210.241)
 2. Log in using **Google Sign-In (GSI)** to access the system.
 
 ## 📜 License
