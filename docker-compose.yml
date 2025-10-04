@@ -1,0 +1,32 @@
+name: course-registration
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: course-backend
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      MONGODB_URI: ${MONGODB_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      CLIENT_ID: ${CLIENT_ID}
+    ports:
+      - "3000:3000"
+
+
+  frontend:
+    build:
+      context: ./frontend/courseRegistration
+      dockerfile: Dockerfile
+    container_name: course-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+
+
+
+
