@@ -1,68 +1,81 @@
 # 🎓 Course Registration
 
-A web-based **Course Registration System** where **Students** can log in using **Google Sign-In (GSI)** and register for **Elective** and **Open Elective** courses based on their department eligibility. **Staff** can manage courses and view registered students, while the **Admin** manages users. 
+A web-based Course Registration System where Students can sign in with Google Sign-In (GSI) and register for Elective and Open Elective courses. Staff can manage courses and view registered students, while the Admin manages users.
 
 ## 🚀 Features
-- **Google Sign-In (GSI)** authentication
-- **Role-based access** (Student, Staff, Admin)
-- **JWT authentication with cookies**
-- **Authorization for each route**
-- **RESTful API with Node.js & Express**
-- **Validation in both Frontend and Backend**
-- **Api level validation and schema level validation**
-- **MongoDB database integration**
-- **AWS Deployment: Hosted on an AWS EC2 instance**
+- Google Sign-In (GSI) authentication
+- Role-based access (Student, Staff, Admin)
+- JWT authentication with cookies
+- Authorization on each backend route
+- RESTful API with Node.js & Express
+- Validation on both frontend and backend
+- MongoDB database (Mongoose)
 
-## 🛠️ Technologies Used
-### **Frontend (Angular)**
-- Angular 19
-- Tailwind CSS
-- Google OAuth (GSI)
-- Angular Material
+## 🛠️ Tech stack
+- Frontend: Angular 19, Tailwind CSS, Angular Material
+- Backend: Node.js, Express, Mongoose
+- Auth: Google OAuth (GSI), JWT
 
-### **Backend (Node.js & Express)**
+## 🔒 Notes on Google Sign-In (GSI)
+GSI requires a secure context (HTTPS) and will not work over plain HTTP except on `localhost`.
 
-- Node.js & Express.js
-- MongoDB with Mongoose (ODM)
-- JSON Web Tokens (JWT)
-- Google OAuth API
-- CORS 
-
-
-## 🔒 Security Features
-
-### Frontend Route Protection
-- **Angular Route Guards**: Restrict access to protected routes.
-- Once logged in, users can access other routes based on their role.
-
-### Backend Security
-- **JWT Authentication**: Users must be logged in to access APIs.
-- **Role-Based Access Control (RBAC)**:
-  - **Student**: Can only register for courses in their department.
-  - **Staff**: Can view the registered students in their department and also add/remove/edit/delet the courses.
-  - **Admin**: Manages the Users like Student and the Staff.
-
-## 🌐 Deployment
-
-The project is deployed on an **AWS EC2 Instance** with the following setup:
-- **Frontend**: Hosted using NGINX.
-- **Backend**: Running on Node.js with PM2 for process management (24/7).
-- **Database**: MongoDB Atlas (cloud-hosted).
-
-## ⚠️ Note on Google Sign-In (GSI) and HTTP
-
-Google Sign-In (GSI) **requires a secure context**, which means:
-
-> 🔒 GSI will **NOT work over HTTP** — it **only works over HTTPS** or on `localhost`.
-
-try to login with these provided emails:
-- Student: kathiresan.it22@bitsathy.ac.in 
+Test accounts (examples provided by the project author):
+- Student: kathiresan.it22@bitsathy.ac.in
 - Admin: kathir2004admin@gmail.com
 - Staff: kathir2004harini@gmail.com
 
-### Steps to Access:
-1. Live URL [http://51.21.210.241](http://51.21.210.241)
-2. Log in using **Google Sign-In (GSI)** to access the system.
+## 📦 Docker (local development / quick start)
+This repository includes a `docker-compose.yml` at the project root with two services:
+
+- `backend` — builds from `./backend`, exposes port 3000 (mapped `3000:3000`)
+- `frontend` — builds from `./frontend/courseRegistration`, serves the Angular app on port 80 inside the container and is mapped to host port 4200 (mapped `4200:80`)
+
+Prerequisites
+- Docker Desktop (Windows) — make sure Docker Engine and Docker Compose are available.
+
+Environment variables
+Create a `.env` file in the project root (next to `docker-compose.yml`) with the following values:
+
+```env
+# Example .env (replace placeholders before running)
+MONGODB_URI=mongodb+srv://<user>:<password>@cluster0.mongodb.net/dbname
+JWT_SECRET=your_jwt_secret_here
+CLIENT_ID=your_google_oauth_client_id
+```
+
+How to build & run (PowerShell)
+
+```powershell
+# build and start all services in detached mode
+docker compose up --build -d
+
+# view logs (all services)
+docker compose logs -f
+
+# view logs for a single service (e.g., backend)
+docker compose logs -f backend
+
+# stop and remove containers
+docker compose down
+
+# rebuild a single service and restart (example: backend)
+docker compose build backend; docker compose up -d backend
+```
+
+Accessing the app
+- Frontend: http://localhost:4200
+- Backend API: http://localhost:3000 (paths as defined in `backend/src/routes`)
+
+Useful tips
+- If you change environment variables in `.env`, restart the services with `docker compose down` then `docker compose up --build -d`.
+
+## 🗂️ Project structure (high level)
+- `backend/` — Node.js API, Dockerfile for backend
+- `frontend/courseRegistration` — Angular app, Dockerfile for frontend
+- `docker-compose.yml` — orchestrates backend and frontend containers
+
+## 🌐 Deployment notes
+The project was deployed on an AWS EC2 instance, where NGINX served as a reverse proxy on port 80 for the Angular frontend and forwarded API requests to the Node.js backend running under PM2. Google OAuth credentials and JWT secrets were securely managed in the backend environment.
 
 ## 📜 License
 This project is licensed under the [MIT License](LICENSE).
